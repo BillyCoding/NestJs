@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ResponseNull, User } from './interfaces/user.interface';
 
 @Injectable()
@@ -15,6 +15,10 @@ export class UsersService {
 
   findUser(id: number): User | ResponseNull {
     const res = this.users.find((item) => item.id == id);
+
+    if (!res) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
     return res || { message: 'User not found' };
   }
 
