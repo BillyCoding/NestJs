@@ -6,3 +6,5 @@ async function bootstrap() {
   await app.listen(3000);
 }
 bootstrap();
+
+console.log('\x1b[32mAPI STARTED IN PORT 3000');
