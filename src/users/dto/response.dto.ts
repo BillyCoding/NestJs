@@ -1,8 +1,8 @@
 export class ResponseDTO {
-  id: number;
+  id: string;
   name: string;
   email: string;
-  idade: number;
+  birtday: Date;
 }
 
 export class ResponseNull {

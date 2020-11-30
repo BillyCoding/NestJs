@@ -1,29 +1,60 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { ResponseNull, User } from './interfaces/user.interface';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { UserTypes, UserResponse } from './interfaces/user.interface';
+import { User } from './user.entity';
 
 @Injectable()
 export class UsersService {
-  private readonly users: User[] = [
-    { id: 1, email: 'johndoo@gmail.com', idade: 21, name: 'John Doo' },
-    { id: 2, email: 'johndoo2@gmail.com', idade: 21, name: 'John Doo' },
-    { id: 3, email: 'johndoo3@gmail.com', idade: 21, name: 'John Doo' },
-  ];
+  constructor(
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+  ) {}
 
-  findAll(): User[] {
-    return this.users;
+  findAll(): Promise<UserTypes[]> {
+    return this.usersRepository.find();
   }
 
-  findUser(id: number): User | ResponseNull {
-    const res = this.users.find((item) => item.id == id);
+  uuid(uuid: string): boolean {
+    const reg = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    if (reg.test(uuid) === true) {
+      return true;
+    }
+    return false;
+  }
+
+  getAge(d1) {
+    const d2 = new Date();
+    const diff = d2.getTime() - d1.getTime();
+    return Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+  }
+
+  async findUser(id: string): Promise<UserResponse> {
+    if (!this.uuid(id)) {
+      throw new HttpException(
+        'Please, insert a valid uuid',
+        HttpStatus.CONFLICT,
+      );
+    }
+    const res = await this.usersRepository.findOne({ where: { id } });
 
     if (!res) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
-    return res || { message: 'User not found' };
+
+    const birtday = new Date(
+      res.birtday.getUTCFullYear(),
+      res.birtday.getUTCMonth(),
+      res.birtday.getUTCDay(),
+    );
+
+    const age = this.getAge(birtday);
+    return { ...res, age };
   }
 
-  createUser(user: User): User {
-    this.users.push(user);
+  createUser(user: UserTypes): UserTypes {
+    const createUser = this.usersRepository.create(user);
+    this.usersRepository.save(createUser);
     return user;
   }
 }

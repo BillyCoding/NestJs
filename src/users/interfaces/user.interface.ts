@@ -1,10 +1,14 @@
-export interface User {
-  id: number;
+export interface UserTypes {
+  id: string;
   name: string;
   email: string;
-  idade: number;
+  birtday: Date;
 }
 
-export interface ResponseNull {
-  message: string;
+export interface UserResponse {
+  id: string;
+  name: string;
+  email: string;
+  birtday: Date;
+  age: number;
 }
