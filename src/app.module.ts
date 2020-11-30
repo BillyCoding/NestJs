@@ -9,10 +9,10 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 
-// import OrmConfig from '../ormconfig';
+import OrmConfig from '../ormconfig';
 
 @Module({
-  imports: [UsersModule],
+  imports: [UsersModule, OrmConfig],
   controllers: [AppController],
   providers: [AppService],
 })
