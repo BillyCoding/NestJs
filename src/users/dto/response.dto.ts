@@ -3,6 +3,7 @@ export class ResponseDTO {
   name: string;
   email: string;
   birtday: Date;
+  password: string;
 }
 
 export class ResponseNull {

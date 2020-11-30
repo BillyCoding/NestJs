@@ -3,6 +3,7 @@ export interface UserTypes {
   name: string;
   email: string;
   birtday: Date;
+  password: string;
 }
 
 export interface UserResponse {
@@ -10,5 +11,6 @@ export interface UserResponse {
   name: string;
   email: string;
   birtday: Date;
+  password: string;
   age: number;
 }
