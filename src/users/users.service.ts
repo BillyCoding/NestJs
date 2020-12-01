@@ -52,9 +52,15 @@ export class UsersService {
     return { ...res, age };
   }
 
-  createUser(user: UserTypes): UserTypes {
+  createUser(user: UserTypes): Promise<any> {
     const createUser = this.usersRepository.create(user);
-    this.usersRepository.save(createUser);
-    return user;
+    const saveInDB = this.usersRepository
+      .save(createUser)
+      .then(() => user)
+      .catch((err) => {
+        throw new HttpException(err.message, HttpStatus.CONFLICT);
+      });
+
+    return saveInDB;
   }
 }

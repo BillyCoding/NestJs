@@ -18,7 +18,7 @@ export class UsersController {
   }
 
   @Post()
-  createUser(@Body() body: UserTypes): ResponseDTO {
+  createUser(@Body() body: UserTypes): Promise<any> {
     return this.usersService.createUser(body);
   }
 }
