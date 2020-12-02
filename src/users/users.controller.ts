@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Bind,
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+} from '@nestjs/common';
 import { ResponseDTO } from './dto/response.dto';
 import { UserTypes } from './interfaces/user.interface';
 import { UsersService } from './users.service';
@@ -12,13 +20,14 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get(':id')
-  getFindUser(@Param() params): Promise<ResponseDTO> {
-    return this.usersService.findUser(params.id);
+  @Get(':uuid')
+  @Bind(Param('uuid', new ParseUUIDPipe()))
+  async findOne(uuid): Promise<ResponseDTO> {
+    return this.usersService.findUser(uuid);
   }
 
   @Post()
-  createUser(@Body() body: UserTypes): Promise<any> {
-    return this.usersService.createUser(body);
+  async create(@Body() createCatDto) {
+    return this.usersService.createUser(createCatDto);
   }
 }

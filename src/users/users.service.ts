@@ -15,14 +15,6 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
-  uuid(uuid: string): boolean {
-    const reg = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-    if (reg.test(uuid) === true) {
-      return true;
-    }
-    return false;
-  }
-
   getAge(d1) {
     const d2 = new Date();
     const diff = d2.getTime() - d1.getTime();
@@ -30,12 +22,6 @@ export class UsersService {
   }
 
   async findUser(id: string): Promise<UserResponse> {
-    if (!this.uuid(id)) {
-      throw new HttpException(
-        'Please, insert a valid uuid',
-        HttpStatus.CONFLICT,
-      );
-    }
     const res = await this.usersRepository.findOne({ where: { id } });
 
     if (!res) {
