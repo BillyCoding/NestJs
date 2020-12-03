@@ -6,9 +6,9 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  UsePipes,
 } from '@nestjs/common';
 import { ResponseDTO } from './dto/response.dto';
-import { UserTypes } from './interfaces/user.interface';
 import { UsersService } from './users.service';
 
 @Controller('users')
